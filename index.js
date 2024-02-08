@@ -28,8 +28,15 @@ app.get("/", (req, res) => {
 
 // Partie principale du site (affiche tous les characters)--
 app.get("/characters", async (req, res) => {
+  const filters = {};
+  if (req.query.skip) {
+    filters.skip = req.query.skip;
+  }
+
   try {
-    const { data } = await axios.get(url + "/characters?apiKey=" + apiKey);
+    const { data } = await axios.get(
+      `${url}/characters?apiKey=${apiKey}&skip=${filters.skip}`
+    );
     res.status(200).json({ data });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -41,7 +48,7 @@ app.get("/character/:characterId", async (req, res) => {
   try {
     const { characterId } = req.params;
     const { data } = await axios.get(
-      url + "/character/" + characterId + "?apiKey=" + apiKey
+      `${url}/character/${characterId}?apiKey=${apiKey}`
     );
     res.status(200).json({ data });
   } catch (error) {
@@ -52,19 +59,35 @@ app.get("/character/:characterId", async (req, res) => {
 // Affiche tous les comics
 app.get("/comics", async (req, res) => {
   try {
-    const { data } = await axios.get(url + "/comics?apiKey=" + apiKey);
+    let filters = {};
+    if (req.query.skip) {
+      filters.skip = req.query.skip;
+    }
+
+    if (req.query.title) {
+      filters.title = req.query.title;
+    }
+
+    const { data } = await axios.get(
+      `${url}/comics?apiKey=${apiKey}&skip=${filters.skip}`
+    );
+    // const { data } = await axios.get(url + "/comics?apiKey=" + apiKey);
     res.status(200).json({ data });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Affiche un comic --
+// Affiche un comic pour la barre de recherche --
 app.get("/comic/:comicId", async (req, res) => {
+  let filters = {};
+  if (req.query.skip) {
+    filters.skip = req.query.skip;
+  }
   try {
     const { comicId } = req.params;
     const { data } = await axios.get(
-      url + "/comic/" + comicId + "?apiKey=" + apiKey
+      `${url}/comic/${comicId}?apiKey=${apiKey}&skip=${filters.skip}`
     );
     res.status(200).json({ data });
   } catch (error) {

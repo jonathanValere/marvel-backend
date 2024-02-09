@@ -28,14 +28,13 @@ app.get("/", (req, res) => {
 
 // Partie principale du site (affiche tous les characters)--
 app.get("/characters", async (req, res) => {
-  const filters = {};
-  if (req.query.skip) {
-    filters.skip = req.query.skip;
-  }
+  // Récupérer les query
+  const skip = req.query.skip || 0;
+  const name = req.query.name || "";
 
   try {
     const { data } = await axios.get(
-      `${url}/characters?apiKey=${apiKey}&skip=${filters.skip}`
+      `${url}/characters?apiKey=${apiKey}&skip=${skip}&name=${name}`
     );
     res.status(200).json({ data });
   } catch (error) {
@@ -46,6 +45,7 @@ app.get("/characters", async (req, res) => {
 // Affiche un character avec ses informations --
 app.get("/character/:characterId", async (req, res) => {
   try {
+    // Récupérer les params (:characterId)
     const { characterId } = req.params;
     const { data } = await axios.get(
       `${url}/character/${characterId}?apiKey=${apiKey}`
@@ -59,35 +59,30 @@ app.get("/character/:characterId", async (req, res) => {
 // Affiche tous les comics
 app.get("/comics", async (req, res) => {
   try {
-    let filters = {};
-    if (req.query.skip) {
-      filters.skip = req.query.skip;
-    }
+    // Récupérer les query
+    const skip = req.query.skip || 0;
+    const title = req.query.title || "";
 
-    if (req.query.title) {
-      filters.title = req.query.title;
-    }
-
+    // Requête vers l'API Marvel
     const { data } = await axios.get(
-      `${url}/comics?apiKey=${apiKey}&skip=${filters.skip}`
+      `${url}/comics?apiKey=${apiKey}&skip=${skip}&title=${title}`
     );
-    // const { data } = await axios.get(url + "/comics?apiKey=" + apiKey);
+    // Retour des données
     res.status(200).json({ data });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
 });
 
-// Affiche un comic pour la barre de recherche --
+// Affiche un comic dans les details d'un character --
 app.get("/comic/:comicId", async (req, res) => {
-  let filters = {};
-  if (req.query.skip) {
-    filters.skip = req.query.skip;
-  }
   try {
+    // Récupérer les query et params
+    const skip = req.query.skip;
     const { comicId } = req.params;
+
     const { data } = await axios.get(
-      `${url}/comic/${comicId}?apiKey=${apiKey}&skip=${filters.skip}`
+      `${url}/comic/${comicId}?apiKey=${apiKey}&skip=${skip}`
     );
     res.status(200).json({ data });
   } catch (error) {

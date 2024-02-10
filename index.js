@@ -6,7 +6,6 @@ const cors = require("cors");
 
 // .env --
 const port = process.env.PORT;
-// const apiKey = process.env.API_KEY;
 
 const app = express();
 app.use(cors());

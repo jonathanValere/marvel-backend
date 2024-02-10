@@ -10,13 +10,20 @@ const url = "https://lereacteur-marvel-api.herokuapp.com";
 router.get("/comics", async (req, res) => {
   try {
     // Récupérer les query
-    const skip = req.query.skip || 0;
-    const title = req.query.title || "";
+    let query = `apiKey=${apiKey}`;
+
+    if (req.query.title) {
+      query += `&title=${req.query.title}`;
+    }
+
+    if (req.query.page) {
+      query += `&skip=${(req.query.page - 1) * 100}`;
+    }
+    // const skip = req.query.skip || 0;
+    // const title = req.query.title || "";
 
     // Requête vers l'API Marvel
-    const { data } = await axios.get(
-      `${url}/comics?apiKey=${apiKey}&skip=${skip}&title=${title}`
-    );
+    const { data } = await axios.get(`${url}/comics?${query}`);
     // Retour des données
     res.status(200).json({ data });
   } catch (error) {

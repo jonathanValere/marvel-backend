@@ -8,14 +8,20 @@ const url = "https://lereacteur-marvel-api.herokuapp.com";
 
 // Partie principale du site (affiche tous les characters)--
 router.get("/characters", async (req, res) => {
-  // Récupérer les query
-  const skip = req.query.skip || 0;
-  const name = req.query.name || "";
-
   try {
-    const { data } = await axios.get(
-      `${url}/characters?apiKey=${apiKey}&skip=${skip}&name=${name}`
-    );
+    // Récupérer les query
+    let query = `apiKey=${apiKey}`;
+
+    if (req.query.name) {
+      query += `&name=${req.query.name}`;
+    }
+
+    if (req.query.page) {
+      query += `&skip=${(req.query.page - 1) * 100}`;
+    }
+    // const skip = req.query.skip || 0;
+    // const name = req.query.name || "";
+    const { data } = await axios.get(`${url}/characters?${query}`);
     res.status(200).json({ data });
   } catch (error) {
     res.status(500).json({ message: error.message });

@@ -3,12 +3,14 @@ require("dotenv").config();
 // Import package --
 const express = require("express");
 const cors = require("cors");
+const axios = require("axios");
 
 // .env --
 const port = process.env.PORT;
 
 const app = express();
 app.use(cors());
+app.use(express.json());
 
 // ROUTES -----------------
 // Improt des routes--
@@ -21,6 +23,15 @@ app.use(routesCharacter);
 app.get("/", (req, res) => {
   try {
     res.status(200).json({ message: "Bienvenue sur mon site Marvel 🦸🏾!" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
+app.post("/user/signup", (req, res) => {
+  try {
+    console.log("body >>>>", req.body);
+    res.status(200).json({ message: "Bienvenue" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

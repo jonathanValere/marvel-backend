@@ -21,7 +21,7 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
 
     // Si le mail ou le username existent, émettre un message d'erreur
     if (user || isUserNameExists) {
-      throw new Error("Username or/and password already exists !");
+      throw new Error("Username or/and email already exists !");
     }
 
     // Vérifier si les champs sont remplis

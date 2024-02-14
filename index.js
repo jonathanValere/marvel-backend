@@ -2,8 +2,22 @@ require("dotenv").config();
 
 // Import package --
 const express = require("express");
+const mongoose = require("mongoose");
+const mongodbUri = process.env.MONGODB_URI;
 const cors = require("cors");
-const axios = require("axios");
+
+//Connection to DataBase
+const connectToDataBase = async () => {
+  try {
+    await mongoose.connect(mongodbUri);
+    console.log("Connection to database ✅");
+  } catch (error) {
+    console.log("error to connection! ❌");
+  }
+};
+
+connectToDataBase();
+// ---
 
 // .env --
 const port = process.env.PORT;
@@ -18,20 +32,13 @@ const routesComic = require("./routes/comic");
 app.use(routesComic);
 const routesCharacter = require("./routes/character");
 app.use(routesCharacter);
+const routesUser = require("./routes/user");
+app.use(routesUser);
 
 // Homepage --
 app.get("/", (req, res) => {
   try {
     res.status(200).json({ message: "Bienvenue sur mon site Marvel 🦸🏾!" });
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-});
-
-app.post("/user/signup", (req, res) => {
-  try {
-    console.log("body >>>>", req.body);
-    res.status(200).json({ message: "Bienvenue" });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

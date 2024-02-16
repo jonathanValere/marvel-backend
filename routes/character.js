@@ -37,7 +37,7 @@ router.get("/character/:characterId", async (req, res) => {
     const { data } = await axios.get(
       `${url}/character/${characterId}?apiKey=${apiKey}`
     );
-    res.status(200).json({ data });
+    res.status(200).json({ item: "character", data });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

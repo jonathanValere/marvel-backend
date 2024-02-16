@@ -34,6 +34,8 @@ const routesCharacter = require("./routes/character");
 app.use(routesCharacter);
 const routesUser = require("./routes/user");
 app.use(routesUser);
+const routesFavoris = require("./routes/favoris");
+app.use(routesFavoris);
 
 // Homepage --
 app.get("/", (req, res) => {

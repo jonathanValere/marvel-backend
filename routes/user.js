@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const isAuthenticated = require("../middlewares/isAuthenticated");
 
 // Import du model
 const User = require("../models/User");
@@ -16,8 +17,6 @@ router.post("/user/signup", fileUpload(), async (req, res) => {
     const isUserNameExists = await User.findOne({
       account: { username: req.body.username },
     });
-
-    console.log(user, isUserNameExists);
 
     // Si le mail ou le username existent, émettre un message d'erreur
     if (user || isUserNameExists) {
@@ -62,13 +61,14 @@ router.post("/user/login", fileUpload(), async (req, res) => {
 
     if (user) {
       // Vérifier si le mot de passe est correct
-
       if (
         SHA256(req.body.password + user.salt).toString(encBase64) === user.hash
       ) {
-        res
-          .status(200)
-          .json({ _id: user._id, token: user.token, account: user.account });
+        res.status(200).json({
+          _id: user._id,
+          token: user.token,
+          account: user.account,
+        });
       } else {
         res.status(500).json({ message: "Email or/and password wrong!" });
       }
@@ -78,6 +78,16 @@ router.post("/user/login", fileUpload(), async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
+});
+
+router.get("/user/:id", isAuthenticated, async (req, res) => {
+  try {
+    const token = req.params.id;
+    const user = await User.findOne({ token });
+    res
+      .status(200)
+      .json({ id: user._id, account: user.account, favorites: user.favorites });
+  } catch (error) {}
 });
 
 module.exports = router;

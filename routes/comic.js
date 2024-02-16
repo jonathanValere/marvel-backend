@@ -55,7 +55,7 @@ router.get("/comic/:comicId", async (req, res) => {
     const { data } = await axios.get(
       `${url}/comic/${comicId}?apiKey=${apiKey}&skip=${skip}`
     );
-    res.status(200).json({ data });
+    res.status(200).json({ item: "comic", data });
   } catch (error) {
     res.status(500).json({ message: error.message });
   }

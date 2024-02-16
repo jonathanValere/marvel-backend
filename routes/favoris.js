@@ -5,6 +5,18 @@ const isAuthenticated = require("../middlewares/isAuthenticated");
 
 const fileUpload = require("express-fileupload");
 
+router.get("/favoris", isAuthenticated, async (req, res) => {
+  try {
+    const user = req.user;
+    if (user) {
+      const favorites = user.favorites;
+      res.status(200).json({ favorites });
+    }
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
+
 router.post(
   "/favoris/:item/add/:id",
   isAuthenticated,
